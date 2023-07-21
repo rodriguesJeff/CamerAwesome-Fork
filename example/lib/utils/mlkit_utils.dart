@@ -3,39 +3,40 @@ import 'package:google_mlkit_face_detection/google_mlkit_face_detection.dart';
 
 extension MLKitUtils on AnalysisImage {
   InputImage toInputImage() {
-    final planeData =
-        when(nv21: (img) => img.planes, bgra8888: (img) => img.planes)?.map(
-      (plane) {
-        return InputImagePlaneMetadata(
-          bytesPerRow: plane.bytesPerRow,
-          height: height,
-          width: width,
-        );
-      },
-    ).toList();
+    // final planeData =
+    //     when(nv21: (img) => img.planes, bgra8888: (img) => img.planes)?.map(
+    //   (plane) {
+    //     return InputImageMetadata(
+    //       bytesPerRow: plane.bytesPerRow,
+    //       height: height,
+    //       width: width,
+    //       size:
+    //     );
+    //   },
+    // ).toList();
 
     return when(nv21: (image) {
       return InputImage.fromBytes(
         bytes: image.bytes,
-        inputImageData: InputImageData(
-          imageRotation: inputImageRotation,
-          inputImageFormat: InputImageFormat.nv21,
-          planeData: planeData,
+        metadata: InputImageMetadata(
+          rotation: inputImageRotation,
+          format: InputImageFormat.nv21,
           size: image.size,
+          bytesPerRow: image.planes.first.bytesPerRow,
         ),
       );
     }, bgra8888: (image) {
-      final inputImageData = InputImageData(
+      final inputImageData = InputImageMetadata(
         size: size,
         // FIXME: seems to be ignored on iOS...
-        imageRotation: inputImageRotation,
-        inputImageFormat: inputImageFormat,
-        planeData: planeData,
+        format: InputImageFormat.bgra8888,
+        rotation: inputImageRotation,
+        bytesPerRow: image.planes.first.bytesPerRow,
       );
 
       return InputImage.fromBytes(
         bytes: image.bytes,
-        inputImageData: inputImageData,
+        metadata: inputImageData,
       );
     })!;
   }

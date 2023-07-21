@@ -61,7 +61,7 @@ class CameraPage extends StatelessWidget {
               ),
               android: AndroidVideoOptions(
                 bitrate: 6000000,
-                quality: VideoRecordingQuality.fhd,
+                // quality: VideoRecordingQuality.fhd,
                 fallbackStrategy: QualityFallbackStrategy.lower,
               ),
             ),
